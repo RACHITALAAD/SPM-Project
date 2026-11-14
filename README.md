@@ -39,7 +39,6 @@ Built for the Software Project Management course at IIIT Vadodara.
 **General**
 - Secure login for two roles: student and faculty
 - Deadlines are checked on the server, so late uploads are blocked
-- Faculty sign-up needs a private code, so students cannot become faculty
 - Uploaded files are kept safely in cloud storage
 
 ---
@@ -150,7 +149,9 @@ scripts/   Helper scripts to start the project
 | Name | GitHub |
 | --- | --- |
 | Rachita Laad | [@RACHITALAAD](https://github.com/RACHITALAAD) |
-| *Add teammate name* | *[@username](https://github.com/username)* |
+| Rasika Kale  | [@rasika2114](https://github.com/rasika2114) |
+| Muskan Tomar | [@Vaish-011](https://github.com/Vaish-011)   |
+| Viditi Joshi | [@vj2573](https://github.com/vj2573)         |
 
 ---
 
