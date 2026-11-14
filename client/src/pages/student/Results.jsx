@@ -32,7 +32,7 @@ export default function Results() {
       <PageHeader
         eyebrow="Student"
         title="Results"
-        // lede="Every file you submitted, with the timestamp and the marks once faculty have evaluated it."
+        
       />
       <Alert message={error} />
       {!items && !error ? <p className="muted">Loading results…</p> : null}
