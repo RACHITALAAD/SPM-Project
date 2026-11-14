@@ -1,141 +1,159 @@
 # Centralized Assignment Submission and Evaluation Platform
 
-Department workspace for IIIT Vadodara. Faculty publish assignments. Students upload a PDF, DOCX, or ZIP before the deadline. Faculty award marks and feedback. Both roles have a dashboard for progress.
+A simple web app where faculty publish assignments, students upload their work, and faculty give marks and feedback, all in one place.
 
-For local development, uploads are stored with Multer in `server/uploads`, so the project runs without a cloud account. For deployment, the backend can switch to Cloudinary authenticated raw storage so uploaded assignment files survive Render restarts. MongoDB stores the submission records; Cloudinary stores the actual files.
+**Live demo:** https://spm-project-bkos.onrender.com
 
-## What you need
 
-- Node.js 18 or newer: https://nodejs.org
-- Docker Desktop, used only to start MongoDB
+---
 
-If MongoDB is already running on port 27017, skip the Docker command.
+## About the Project
 
-## Run it
+Many departments collect assignments through email or chat, which is messy and hard to track. This platform puts everything in one place:
 
-From this folder:
+- Faculty create and publish assignments with deadlines.
+- Students upload a file before the deadline.
+- Faculty review each file and give marks with feedback.
+- Both sides get a dashboard to see progress.
 
+Built for the Software Project Management course at IIIT Vadodara.
+
+---
+
+## Features
+
+**For Faculty**
+- Create, edit, publish, and delete assignments
+- Set and extend deadlines
+- See who has submitted and who has not
+- Download submissions and give marks with feedback
+- Dashboard with class progress and a list of work waiting for marks
+
+**For Students**
+- See all published assignments in one place
+- Upload a PDF, DOCX, or ZIP file (up to 15 MB)
+- Replace a file until it has been evaluated
+- View marks and feedback on the Results page
+- Dashboard with pending and completed work
+
+**General**
+- Secure login for two roles: student and faculty
+- Deadlines are checked on the server, so late uploads are blocked
+- Faculty sign-up needs a private code, so students cannot become faculty
+- Uploaded files are kept safely in cloud storage
+
+---
+
+## Tech Stack
+
+| Part | Technology |
+| --- | --- |
+| Frontend | React, Vite, React Router, Axios |
+| Backend | Node.js, Express |
+| Database | MongoDB (Mongoose) |
+| Login and security | JWT, bcrypt |
+| File uploads | Multer (local), Cloudinary (online) |
+| Hosting | Render, MongoDB Atlas |
+
+---
+
+## Run It on Your Computer
+
+**You need:** [Node.js](https://nodejs.org) 18 or newer, and [Docker Desktop](https://www.docker.com/products/docker-desktop) (only to run MongoDB).
+
+**1. Start the database**
 ```bash
 docker compose up -d --wait
+```
+
+**2. Install everything**
+```bash
 npm run install:all
+```
+
+**3. Add sample data** (optional)
+```bash
 npm run seed
+```
+
+**4. Start the app**
+```bash
 npm run dev
 ```
 
-Or, on Linux / macOS / WSL:
+Open **http://localhost:5173** in your browser. The API runs at http://localhost:5000.
 
+### Sample logins (after running the seed)
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Faculty | faculty@iiitv.edu.in | Faculty@123 |
+| Student | student.aarav@iiitv.edu.in | Student@123 |
+
+> Use the sample data on your own computer only. Never run `npm run seed` on the live database.
+
+### Other useful commands
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Runs the API and website together |
+| `npm run build` | Builds the website for production |
+| `npm start` | Starts the server (and serves the built website) |
+| `npm run seed:reset` | Clears local data and reloads the sample data |
+
+---
+
+## Deploy Online
+
+The app runs as one service on [Render](https://render.com), with [MongoDB Atlas](https://www.mongodb.com/atlas) for data and [Cloudinary](https://cloudinary.com) for files.
+
+**Build command**
 ```bash
-chmod +x scripts/start.sh
-./scripts/start.sh
+npm install --prefix server && npm install --include=dev --prefix client && npm run build --prefix client
 ```
 
-On Windows PowerShell:
-
-```powershell
-.\scripts\start.ps1
-```
-
-Open the address Vite prints. It is usually http://localhost:5173
-
-The API runs at http://localhost:5000. During development the web app proxies `/api` to that port.
-
-## Demo accounts
-
-The seed command creates these users. Password for every student is `Student@123`.
-
-| Role | Name | Email | Password |
-| --- | --- | --- | --- |
-| Faculty | Prof. Ananya Iyer | faculty@iiitv.edu.in | Faculty@123 |
-| Student | Aarav Mehta | student.aarav@iiitv.edu.in | Student@123 |
-| Student | Diya Patel | student.diya@iiitv.edu.in | Student@123 |
-| Student | Kabir Shah | student.kabir@iiitv.edu.in | Student@123 |
-
-Aarav already has one evaluated database assignment and one operating-systems file waiting for marks. Diya’s database file is also waiting. Kabir has not submitted anything. The Software Project Management assignment is still a draft, so students cannot see it until it is published.
-
-In local development, the sign-in page can fill the faculty and Aarav demo accounts. These demo buttons are hidden in production builds.
-
-To wipe the local database and load this sample again:
-
+**Start command**
 ```bash
-npm run seed:reset
+npm start
 ```
 
-Do not run the seed or seed:reset command against your production MongoDB database. The sample accounts use published demo passwords and the sample submission files are local development files.
+**Environment variables to set on Render**
 
-## What to show
+| Name | What it is |
+| --- | --- |
+| `NODE_VERSION` | `20` |
+| `FILE_STORAGE` | `cloudinary` |
+| `MONGODB_URI` | Your MongoDB Atlas connection string |
+| `JWT_SECRET` | A long random secret |
+| `CLIENT_ORIGIN` | Your site address, for example `https://your-app.onrender.com` |
+| `CLOUDINARY_CLOUD_NAME` | From your Cloudinary account |
+| `CLOUDINARY_API_KEY` | From your Cloudinary account |
+| `CLOUDINARY_API_SECRET` | From your Cloudinary account |
+| `FACULTY_REGISTRATION_CODE` | A private code faculty enter when they sign up |
 
-1. Sign in as faculty. The dashboard shows class progress and a queue of work that still needs marks.
-2. Open the draft, or create a new assignment, then publish it. Students only see published assignments.
-3. Sign in as Kabir and upload a PDF, DOCX, or ZIP. The submission stores the upload time.
-4. Sign back in as faculty, open that submission, and save marks plus feedback.
-5. Sign in as the student again. The marks and feedback are on the assignment and on Results.
+Never upload your real `.env` file to GitHub. Add secrets only in Render's Environment settings.
 
-Deadlines are enforced on the server. After the deadline, upload is refused. Faculty can extend the deadline from Edit. A student can replace a file until it has been evaluated. An assignment that already has submissions cannot be deleted or moved back to draft.
+---
 
-## Useful commands
-
-```bash
-npm run dev          # API and web app together
-npm run dev:api      # API only, http://localhost:5000
-npm run dev:web      # web app only, http://localhost:5173
-npm run build        # production web build
-npm start            # API, and the web build if client/dist exists
-```
-
-You can also use two terminals:
-
-```bash
-npm run dev --prefix server
-npm run dev --prefix client
-```
-
-## Project layout
+## Project Structure
 
 ```text
-client/     React screens for student and faculty
-server/     Express API, JWT auth, MongoDB models, Multer uploads
-scripts/    One-command start scripts
+client/    React website (student and faculty screens)
+server/    Express API, login, database models, file uploads
+scripts/   Helper scripts to start the project
 ```
 
-Collections: Users, Assignments, Submissions, Evaluations.
+---
 
-Main API routes:
+## Contributors
 
-- `POST /api/auth/register` and `POST /api/auth/login`
-- `GET/POST /api/assignments`, `PUT/DELETE /api/assignments/:id`, `PATCH /api/assignments/:id/publish`
-- `POST /api/assignments/:id/submit` for the file upload
-- `GET /api/submissions/mine` and `GET /api/submissions/assignment/:id`
-- `POST /api/submissions/:id/evaluate`
-- `GET /api/dashboard`
+| Name | GitHub |
+| --- | --- |
+| Rachita Laad | [@RACHITALAAD](https://github.com/RACHITALAAD) |
+| *Add teammate name* | *[@username](https://github.com/username)* |
 
-## If it does not start
+---
 
-- `docker compose up -d --wait` failed: start Docker Desktop, or free port 27017.
-- `npm` is not found: install Node.js 18+ and open a new terminal.
-- The page says it cannot reach the server: keep `npm run dev` running and use the Vite URL, not a file opened from the desktop.
-- Seed says users already exist: that is fine. Use `npm run seed:reset` only when you want the sample data back.
-- Change `JWT_SECRET` in `server/.env` before using this anywhere except a local demo.
+## License
 
-
-## Cloud deployment storage settings
-
-The default `FILE_STORAGE` mode is `local`, which preserves the original local-development workflow and uses `server/uploads`.
-
-For a Render deployment with persistent assignment files, configure these environment variables in Render:
-
-```env
-FILE_STORAGE=cloudinary
-MONGODB_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_long_random_secret
-CLIENT_ORIGIN=https://your-render-service.onrender.com
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-FACULTY_REGISTRATION_CODE=your_private_faculty_registration_code
-```
-
-When `FILE_STORAGE=cloudinary`, new PDF, DOCX, and ZIP submissions are uploaded to Cloudinary as authenticated raw assets. The backend checks the user's access before generating a short-lived download URL. The local `server/.env` file must never be committed to GitHub; use Render's Environment settings for production secrets.
-
-Cloudinary uses Node.js built-in `fetch`, `FormData`, and `Blob`; no additional Cloudinary npm package is required. Node.js 20 is recommended (the repository `.nvmrc` is set to 20).
-
-To test locally with Cloudinary, add the Cloudinary values to `server/.env` and change `FILE_STORAGE=local` to `FILE_STORAGE=cloudinary`. To keep the original local-file workflow, leave `FILE_STORAGE` unset or set it to `local`.
+This project was created for academic purposes.
