@@ -56,7 +56,7 @@ Built for the Software Project Management course at IIIT Vadodara.
 
 ---
 
-## Run It on Your Computer
+## Run It on your specific device 
 
 **You need:** [Node.js](https://nodejs.org) 18 or newer, and [Docker Desktop](https://www.docker.com/products/docker-desktop) (only to run MongoDB).
 
@@ -91,7 +91,7 @@ Open **http://localhost:5173** in your browser. The API runs at http://localhost
 
 > Use the sample data on your own computer only. Never run `npm run seed` on the live database.
 
-### Other useful commands
+### Other useful commands to run 
 
 | Command | What it does |
 | --- | --- |
