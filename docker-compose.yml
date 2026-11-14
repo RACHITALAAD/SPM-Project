@@ -1,0 +1,17 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: assignment-platform-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - assignment_mongo:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  assignment_mongo:

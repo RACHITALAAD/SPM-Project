@@ -1,0 +1,23 @@
+{
+  "name": "centralized-assignment-platform",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Centralized assignment submission and evaluation platform.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "db": "docker compose up -d --wait",
+    "seed": "npm run seed --prefix server",
+    "seed:reset": "npm run seed:reset --prefix server",
+    "dev:api": "npm run dev --prefix server",
+    "dev:web": "npm run dev --prefix client",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev:api\" \"npm run dev:web\"",
+    "build": "npm run build --prefix client",
+    "start": "npm run start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
